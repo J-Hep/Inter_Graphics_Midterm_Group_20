@@ -11,7 +11,7 @@ layout(location = 0) out vec4 frag_color;
 struct Material {
 	sampler2D Diffuse;
 	float     Shininess;
-    int       Steps;
+   // int       Steps;
 };
 // Create a uniform for the material
 uniform Material u_Material;

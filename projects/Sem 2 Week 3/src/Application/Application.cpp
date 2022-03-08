@@ -162,12 +162,16 @@ float Application::keyboard()
 		toggleKeys = 2;
 		//std::cout << "User Pressed 0" << std::endl;
 	}
-
-	// for key 2 Ambient lighting
+	// for key 3 specular lighting
 	if (glfwGetKey(_window, GLFW_KEY_3) == GLFW_PRESS) {
 		toggleKeys = 3;
 		//std::cout << "User Pressed 0" << std::endl;
 	}
+	// for key 4 ambient + specular lighting
+	//if (glfwGetKey(_window, GLFW_KEY_4) == GLFW_PRESS) {
+	//	toggleKeys = 4;
+		//std::cout << "User Pressed 0" << std::endl;
+	//}
 
 	return toggleKeys;
 }

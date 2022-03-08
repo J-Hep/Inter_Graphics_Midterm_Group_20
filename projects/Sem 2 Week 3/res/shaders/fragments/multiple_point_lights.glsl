@@ -90,6 +90,10 @@ vec3 CalcPointLightContribution(vec3 worldPos, vec3 normal, vec3 viewDir, Light 
 		{
 			return (diffuseOut + specularOut) * attenuation;
 		}
+		//if (keytog == 4)
+		//{
+		//	return (diffuseOut + specularOut);
+		//}
 
 	//return (diffuseOut + specularOut) * attenuation;
 }
@@ -125,6 +129,12 @@ vec3 CalcAllLightContribution(vec3 worldPos, vec3 normal, vec3 camPos, float shi
 		{
 			lightAccumulation += CalcPointLightContribution(worldPos, normal, viewDir, Lights[ix], shininess, keyTog);
 		}
+
+		//if (keyTog == 4)
+		//{
+		//	lightAccumulation += CalcPointLightContribution(worldPos, normal, viewDir, Lights[ix], shininess, keyTog);
+		//}
+
 		//lightAccumulation += CalcPointLightContribution(worldPos, normal, viewDir, Lights[ix], shininess);
 	}
 
