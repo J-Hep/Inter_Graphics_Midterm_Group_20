@@ -153,14 +153,14 @@ void DefaultSceneLayer::_CreateScene()
 
 		// Load in the meshes
 		MeshResource::Sptr monkeyMesh = ResourceManager::CreateAsset<MeshResource>("Monkey.obj");
-		MeshResource::Sptr Enemy1Mesh = ResourceManager::CreateAsset<MeshResource>("Spaceship2.obj");
+		MeshResource::Sptr EnemyMesh = ResourceManager::CreateAsset<MeshResource>("Spaceship2.obj");
 
 		// Load in some textures
 		Texture2D::Sptr    boxTexture   = ResourceManager::CreateAsset<Texture2D>("textures/box-diffuse.png");
 		Texture2D::Sptr    boxSpec      = ResourceManager::CreateAsset<Texture2D>("textures/box-specular.png");
 		Texture2D::Sptr    monkeyTex    = ResourceManager::CreateAsset<Texture2D>("textures/monkey-uvMap.png");
 		// Enemy Texture
-		Texture2D::Sptr    enemyTex = ResourceManager::CreateAsset<Texture2D>("textures/.png");
+		Texture2D::Sptr    enemyTex = ResourceManager::CreateAsset<Texture2D>("textures/BlankSpaceshipTex.png");
 		Texture2D::Sptr    leafTex      = ResourceManager::CreateAsset<Texture2D>("textures/leaves.png");
 		leafTex->SetMinFilter(MinFilter::Nearest);
 		leafTex->SetMagFilter(MagFilter::Nearest);
@@ -364,7 +364,7 @@ void DefaultSceneLayer::_CreateScene()
 
 			RigidBody::Sptr physics = monkey1->Add<RigidBody>(RigidBodyType::Dynamic);
 			auto PlayerCollider = physics->AddCollider(BoxCollider::Create(glm::vec3(1.0f, 1.0f, 1.0f)));
-			PlayerCollider->SetPosition(glm::vec3(0.0, 0.75, 0.0));
+			PlayerCollider->SetPosition(glm::vec3(0.0, 0.0, 0.0));
 
 			/*
 			// Example of a trigger that interacts with static and kinematic bodies as well as dynamic bodies
@@ -380,8 +380,8 @@ void DefaultSceneLayer::_CreateScene()
 		GameObject::Sptr Enemy1 = scene->CreateGameObject("Enemy 1");
 		{
 			// Set position in the scene
-			Enemy1->SetPostion(glm::vec3(0.0f, 10.0f, 1.0f));
-			Enemy1->SetRotation(glm::vec3(0.0f, 0.0f, 90.0f));
+			Enemy1->SetPostion(glm::vec3(0.0f, -10.0f, 1.0f));
+			Enemy1->SetRotation(glm::vec3(-90.0f, 0.0f, 0.0f));
 
 			// Add some behaviour that relies on the physics body
 			//monkey1->Add<JumpBehaviour>();
@@ -390,12 +390,72 @@ void DefaultSceneLayer::_CreateScene()
 
 			// Create and attach a renderer for the monkey
 			RenderComponent::Sptr renderer = Enemy1->Add<RenderComponent>();
-			renderer->SetMesh(Enemy1Mesh);
-			//renderer->SetMaterial(monkeyMaterial);
+			renderer->SetMesh(EnemyMesh);
+			renderer->SetMaterial(EnemyMaterial);
 
 			RigidBody::Sptr physics = Enemy1->Add<RigidBody>(RigidBodyType::Dynamic);
-			auto PlayerCollider = physics->AddCollider(BoxCollider::Create(glm::vec3(1.0f, 1.0f, 1.0f)));
-			PlayerCollider->SetPosition(glm::vec3(0.0, 0.75, 0.0));
+			auto PlayerCollider = physics->AddCollider(BoxCollider::Create(glm::vec3(2.0f, 1.0f, 2.0f)));
+			PlayerCollider->SetPosition(glm::vec3(0.0, 0.0, 0.0));
+
+			/*
+			// Example of a trigger that interacts with static and kinematic bodies as well as dynamic bodies
+			TriggerVolume::Sptr trigger = monkey1->Add<TriggerVolume>();
+			trigger->SetFlags(TriggerTypeFlags::Statics | TriggerTypeFlags::Kinematics);
+			trigger->AddCollider(BoxCollider::Create(glm::vec3(1.0f)));
+
+			monkey1->Add<TriggerVolumeEnterBehaviour>();
+			*/
+		}
+		// Enemey 2
+		GameObject::Sptr Enemy2 = scene->CreateGameObject("Enemy 2");
+		{
+			// Set position in the scene
+			Enemy2->SetPostion(glm::vec3(15.0f, -10.0f, 1.0f));
+			Enemy2->SetRotation(glm::vec3(-90.0f, 0.0f, 0.0f));
+
+			// Add some behaviour that relies on the physics body
+			//monkey1->Add<JumpBehaviour>();
+			//Enemy1->Add<CharacterMovement>();
+
+
+			// Create and attach a renderer for the monkey
+			RenderComponent::Sptr renderer = Enemy2->Add<RenderComponent>();
+			renderer->SetMesh(EnemyMesh);
+			renderer->SetMaterial(EnemyMaterial);
+
+			RigidBody::Sptr physics = Enemy2->Add<RigidBody>(RigidBodyType::Dynamic);
+			auto PlayerCollider = physics->AddCollider(BoxCollider::Create(glm::vec3(2.0f, 1.0f, 2.0f)));
+			PlayerCollider->SetPosition(glm::vec3(0.0, 0.0, 0.0));;
+
+			/*
+			// Example of a trigger that interacts with static and kinematic bodies as well as dynamic bodies
+			TriggerVolume::Sptr trigger = monkey1->Add<TriggerVolume>();
+			trigger->SetFlags(TriggerTypeFlags::Statics | TriggerTypeFlags::Kinematics);
+			trigger->AddCollider(BoxCollider::Create(glm::vec3(1.0f)));
+
+			monkey1->Add<TriggerVolumeEnterBehaviour>();
+			*/
+		}
+		// Enemey 3
+		GameObject::Sptr Enemy3 = scene->CreateGameObject("Enemy 3");
+		{
+			// Set position in the scene
+			Enemy3->SetPostion(glm::vec3(-15.0f, -10.0f, 1.0f));
+			Enemy3->SetRotation(glm::vec3(-90.0f, 0.0f, 0.0f));
+
+			// Add some behaviour that relies on the physics body
+			//monkey1->Add<JumpBehaviour>();
+			//Enemy1->Add<CharacterMovement>();
+
+
+			// Create and attach a renderer for the monkey
+			RenderComponent::Sptr renderer = Enemy3->Add<RenderComponent>();
+			renderer->SetMesh(EnemyMesh);
+			renderer->SetMaterial(EnemyMaterial);
+
+			RigidBody::Sptr physics = Enemy3->Add<RigidBody>(RigidBodyType::Dynamic);
+			auto PlayerCollider = physics->AddCollider(BoxCollider::Create(glm::vec3(2.0f, 1.0f, 2.0f)));
+			PlayerCollider->SetPosition(glm::vec3(0.0, 0.0, 0.0));
 
 			/*
 			// Example of a trigger that interacts with static and kinematic bodies as well as dynamic bodies
