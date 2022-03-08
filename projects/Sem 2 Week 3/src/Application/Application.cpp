@@ -37,6 +37,7 @@
 #include "Gameplay/Components/Camera.h"
 #include "Gameplay/Components/RotatingBehaviour.h"
 #include "Gameplay/Components/JumpBehaviour.h"
+#include "Gameplay/Components/ProjectileHandler.h"
 #include "Gameplay/Components/CharacterMovement.h"
 #include "Gameplay/Components/RenderComponent.h"
 #include "Gameplay/Components/MaterialSwapBehaviour.h"
@@ -230,6 +231,7 @@ void Application::_Run()
 			_isRunning = false;
 		}
 
+
 		// Grab the timing singleton instance as a reference
 		Timing& timing = Timing::_singleton;
 
@@ -298,6 +300,7 @@ void Application::_RegisterClasses()
 	ComponentManager::RegisterType<RotatingBehaviour>();
 	ComponentManager::RegisterType<JumpBehaviour>();
 	ComponentManager::RegisterType<CharacterMovement>();
+	ComponentManager::RegisterType<ProjectileHandler>();
 	ComponentManager::RegisterType<MaterialSwapBehaviour>();
 	ComponentManager::RegisterType<TriggerVolumeEnterBehaviour>();
 	ComponentManager::RegisterType<SimpleCameraControl>();
