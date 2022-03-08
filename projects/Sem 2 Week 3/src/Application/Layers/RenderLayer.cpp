@@ -91,6 +91,7 @@ void RenderLayer::OnRender(const Framebuffer::Sptr& prevLayer)
 	frameData.u_Time = static_cast<float>(Timing::Current().TimeSinceSceneLoad());
 	frameData.u_DeltaTime = Timing::Current().DeltaTime();
 	frameData.u_RenderFlags = _renderFlags;
+	frameData.u_toggleKeys = app.keyboard();
 	_frameUniforms->Update();
 
 	Material::Sptr defaultMat = app.CurrentScene()->DefaultMaterial;

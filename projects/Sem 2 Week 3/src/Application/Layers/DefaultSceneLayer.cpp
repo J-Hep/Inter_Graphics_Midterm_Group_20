@@ -199,7 +199,7 @@ void DefaultSceneLayer::_CreateScene()
 			boxMaterial->Set("u_Material.Diffuse", boxTexture);
 			boxMaterial->Set("u_Material.Shininess", 0.1f);
 		}
-
+/*
 		// Our player character that uses monkey material is using toonshader
 		Material::Sptr monkeyMaterial = ResourceManager::CreateAsset<Material>(toonShader);
 		{
@@ -219,6 +219,29 @@ void DefaultSceneLayer::_CreateScene()
 			EnemyMaterial->Set("u_Material.Shininess", 0.1f);
 			EnemyMaterial->Set("u_Material.Steps", 8);
 		}
+*/
+
+		// Our player character that uses monkey material is using toonshader
+		Material::Sptr monkeyMaterial = ResourceManager::CreateAsset<Material>(basicShader);
+		{
+			monkeyMaterial->Name = "Monkey";
+			monkeyMaterial->Set("u_Material.Diffuse", monkeyTex);
+			monkeyMaterial->Set("s_ToonTerm", toonLut);
+			monkeyMaterial->Set("u_Material.Shininess", 0.1f);
+			monkeyMaterial->Set("u_Material.Steps", 8);
+		}
+
+		// Our Enemy Character uses Enemy material using a toonshader
+		Material::Sptr EnemyMaterial = ResourceManager::CreateAsset<Material>(basicShader);
+		{
+			EnemyMaterial->Name = "Enemy";
+			EnemyMaterial->Set("u_Material.Diffuse", monkeyTex);
+			EnemyMaterial->Set("s_ToonTerm", toonLut);
+			EnemyMaterial->Set("u_Material.Shininess", 0.1f);
+			EnemyMaterial->Set("u_Material.Steps", 8);
+		}
+
+
 
 		// This will be the reflective material, we'll make the whole thing 90% reflective
 		Material::Sptr testMaterial = ResourceManager::CreateAsset<Material>(specShader);

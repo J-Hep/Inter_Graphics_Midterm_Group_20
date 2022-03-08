@@ -53,7 +53,7 @@ vec3 SampleEnvironmentMap(vec3 normal) {
 // @param viewDir   Direction between camera and fragment
 // @param Light     The light to caluclate the contribution for
 // @param shininess The specular power for the fragment, between 0 and 1
-vec3 CalcPointLightContribution(vec3 worldPos, vec3 normal, vec3 viewDir, Light light, float shininess) {
+vec3 CalcPointLightContribution(vec3 worldPos, vec3 normal, vec3 viewDir, Light light, float shininess, float keyTog) {
 	// Get the direction to the light in world space
 	vec3 toLight = light.Position.xyz - worldPos;
 	// Get distance between fragment and light
@@ -78,7 +78,20 @@ vec3 CalcPointLightContribution(vec3 worldPos, vec3 normal, vec3 viewDir, Light 
 	// We add the one to prevent divide by zero errors
 	float attenuation = clamp(1.0 / (1.0 + light.ColorAttenuation.w * pow(dist, 2)), 0, 1);
 
-	return (diffuseOut + specularOut) * attenuation;
+		if (keyTog == 2)
+		{
+			return diffuseOut;
+		}
+		if (keyTog == 3)
+		{
+			return specularOut;
+		}
+		if (keyTog == 0)
+		{
+			return (diffuseOut + specularOut) * attenuation;
+		}
+
+	//return (diffuseOut + specularOut) * attenuation;
 }
 
 /*
@@ -88,7 +101,7 @@ vec3 CalcPointLightContribution(vec3 worldPos, vec3 normal, vec3 viewDir, Light 
  * @param normal The normalized surface normal for the fragment
  * @param camPos The camera's position in world space
 */
-vec3 CalcAllLightContribution(vec3 worldPos, vec3 normal, vec3 camPos, float shininess) {
+vec3 CalcAllLightContribution(vec3 worldPos, vec3 normal, vec3 camPos, float shininess, float keyTog) {
     // Will accumulate the contributions of all lights on this fragment
 	vec3 lightAccumulation = AmbientColAndNumLights.rgb;
 
@@ -98,7 +111,21 @@ vec3 CalcAllLightContribution(vec3 worldPos, vec3 normal, vec3 camPos, float shi
 	// Iterate over all lights
 	for(int ix = 0; ix < AmbientColAndNumLights.w && ix < MAX_LIGHTS; ix++) {
 		// Additive lighting model
-		lightAccumulation += CalcPointLightContribution(worldPos, normal, viewDir, Lights[ix], shininess);
+		if (keyTog == 0)
+		{
+			lightAccumulation += CalcPointLightContribution(worldPos, normal, viewDir, Lights[ix], shininess, keyTog);
+		}
+
+		if (keyTog == 2)
+		{
+			lightAccumulation += CalcPointLightContribution(worldPos, normal, viewDir, Lights[ix], shininess, keyTog);
+		}
+
+		if (keyTog == 3)
+		{
+			lightAccumulation += CalcPointLightContribution(worldPos, normal, viewDir, Lights[ix], shininess, keyTog);
+		}
+		//lightAccumulation += CalcPointLightContribution(worldPos, normal, viewDir, Lights[ix], shininess);
 	}
 
 	return lightAccumulation;

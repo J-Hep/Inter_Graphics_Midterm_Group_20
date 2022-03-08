@@ -143,6 +143,35 @@ void Application::SaveSettings()
 	FileHelpers::WriteContentsToFile(settingsPath.string(), _appSettings.dump(1, '\t'));
 }
 
+// key toggle variable
+float toggleKeys = 0;
+float Application::keyboard()
+{
+	// for key 1 no lighting at all
+	if (glfwGetKey(_window, GLFW_KEY_1) == GLFW_PRESS) {
+		toggleKeys = 1;
+		//std::cout << "User Pressed 1" << std::endl;
+	}
+	// for key 0 default lighting
+	if (glfwGetKey(_window, GLFW_KEY_0) == GLFW_PRESS) {
+		toggleKeys = 0;
+		//std::cout << "User Pressed 0" << std::endl;
+	}
+	// for key 2 Ambient lighting
+	if (glfwGetKey(_window, GLFW_KEY_2) == GLFW_PRESS) {
+		toggleKeys = 2;
+		//std::cout << "User Pressed 0" << std::endl;
+	}
+
+	// for key 2 Ambient lighting
+	if (glfwGetKey(_window, GLFW_KEY_3) == GLFW_PRESS) {
+		toggleKeys = 3;
+		//std::cout << "User Pressed 0" << std::endl;
+	}
+
+	return toggleKeys;
+}
+
 void Application::_Run()
 {
 	// TODO: Register layers
