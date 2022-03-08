@@ -42,6 +42,7 @@
 #include "Gameplay/Components/Camera.h"
 #include "Gameplay/Components/RotatingBehaviour.h"
 #include "Gameplay/Components/JumpBehaviour.h"
+#include "Gameplay/Components/CharacterMovement.h"
 #include "Gameplay/Components/RenderComponent.h"
 #include "Gameplay/Components/MaterialSwapBehaviour.h"
 #include "Gameplay/Components/TriggerVolumeEnterBehaviour.h"
@@ -152,11 +153,14 @@ void DefaultSceneLayer::_CreateScene()
 
 		// Load in the meshes
 		MeshResource::Sptr monkeyMesh = ResourceManager::CreateAsset<MeshResource>("Monkey.obj");
+		MeshResource::Sptr Enemy1Mesh = ResourceManager::CreateAsset<MeshResource>("Spaceship2.obj");
 
 		// Load in some textures
 		Texture2D::Sptr    boxTexture   = ResourceManager::CreateAsset<Texture2D>("textures/box-diffuse.png");
 		Texture2D::Sptr    boxSpec      = ResourceManager::CreateAsset<Texture2D>("textures/box-specular.png");
 		Texture2D::Sptr    monkeyTex    = ResourceManager::CreateAsset<Texture2D>("textures/monkey-uvMap.png");
+		// Enemy Texture
+		Texture2D::Sptr    enemyTex = ResourceManager::CreateAsset<Texture2D>("textures/.png");
 		Texture2D::Sptr    leafTex      = ResourceManager::CreateAsset<Texture2D>("textures/leaves.png");
 		leafTex->SetMinFilter(MinFilter::Nearest);
 		leafTex->SetMagFilter(MagFilter::Nearest);
@@ -196,12 +200,24 @@ void DefaultSceneLayer::_CreateScene()
 			boxMaterial->Set("u_Material.Shininess", 0.1f);
 		}
 
-		// This will be the reflective material, we'll make the whole thing 90% reflective
-		Material::Sptr monkeyMaterial = ResourceManager::CreateAsset<Material>(reflectiveShader);
+		// Our player character that uses monkey material is using toonshader
+		Material::Sptr monkeyMaterial = ResourceManager::CreateAsset<Material>(toonShader);
 		{
 			monkeyMaterial->Name = "Monkey";
 			monkeyMaterial->Set("u_Material.Diffuse", monkeyTex);
-			monkeyMaterial->Set("u_Material.Shininess", 0.5f);
+			monkeyMaterial->Set("s_ToonTerm", toonLut);
+			monkeyMaterial->Set("u_Material.Shininess", 0.1f);
+			monkeyMaterial->Set("u_Material.Steps", 8);
+		}
+
+		// Our Enemy Character uses Enemy material using a toonshader
+		Material::Sptr EnemyMaterial = ResourceManager::CreateAsset<Material>(toonShader);
+		{
+			EnemyMaterial->Name = "Enemy";
+			EnemyMaterial->Set("u_Material.Diffuse", monkeyTex);
+			EnemyMaterial->Set("s_ToonTerm", toonLut);
+			EnemyMaterial->Set("u_Material.Shininess", 0.1f);
+			EnemyMaterial->Set("u_Material.Steps", 8);
 		}
 
 		// This will be the reflective material, we'll make the whole thing 90% reflective
@@ -299,7 +315,8 @@ void DefaultSceneLayer::_CreateScene()
 		// Set up the scene's camera
 		GameObject::Sptr camera = scene->MainCamera->GetGameObject()->SelfRef();
 		{
-			camera->SetPostion({ -9, -6, 15 });
+			//camera->SetPostion({ -9, -6, 15 });
+			camera->SetPostion({ 0, 15, 10 });
 			camera->LookAt(glm::vec3(0.0f));
 
 			camera->Add<SimpleCameraControl>();
@@ -328,27 +345,70 @@ void DefaultSceneLayer::_CreateScene()
 			physics->AddCollider(BoxCollider::Create(glm::vec3(50.0f, 50.0f, 1.0f)))->SetPosition({ 0,0,-1 });
 		}
 
+		// Player
 		GameObject::Sptr monkey1 = scene->CreateGameObject("Monkey 1");
 		{
 			// Set position in the scene
-			monkey1->SetPostion(glm::vec3(1.5f, 0.0f, 1.0f));
+			monkey1->SetPostion(glm::vec3(0.0f, 10.0f, 1.0f));
+			monkey1->SetRotation(glm::vec3(0.0f, 0.0f, 90.0f));
 
 			// Add some behaviour that relies on the physics body
-			monkey1->Add<JumpBehaviour>();
+			//monkey1->Add<JumpBehaviour>();
+			monkey1->Add<CharacterMovement>();
+
 
 			// Create and attach a renderer for the monkey
 			RenderComponent::Sptr renderer = monkey1->Add<RenderComponent>();
 			renderer->SetMesh(monkeyMesh);
 			renderer->SetMaterial(monkeyMaterial);
 
+			RigidBody::Sptr physics = monkey1->Add<RigidBody>(RigidBodyType::Dynamic);
+			auto PlayerCollider = physics->AddCollider(BoxCollider::Create(glm::vec3(1.0f, 1.0f, 1.0f)));
+			PlayerCollider->SetPosition(glm::vec3(0.0, 0.75, 0.0));
+
+			/*
 			// Example of a trigger that interacts with static and kinematic bodies as well as dynamic bodies
 			TriggerVolume::Sptr trigger = monkey1->Add<TriggerVolume>();
 			trigger->SetFlags(TriggerTypeFlags::Statics | TriggerTypeFlags::Kinematics);
 			trigger->AddCollider(BoxCollider::Create(glm::vec3(1.0f)));
 
 			monkey1->Add<TriggerVolumeEnterBehaviour>();
+			*/
 		}
 
+		// Enemey 1
+		GameObject::Sptr Enemy1 = scene->CreateGameObject("Enemy 1");
+		{
+			// Set position in the scene
+			Enemy1->SetPostion(glm::vec3(0.0f, 10.0f, 1.0f));
+			Enemy1->SetRotation(glm::vec3(0.0f, 0.0f, 90.0f));
+
+			// Add some behaviour that relies on the physics body
+			//monkey1->Add<JumpBehaviour>();
+			//Enemy1->Add<CharacterMovement>();
+
+
+			// Create and attach a renderer for the monkey
+			RenderComponent::Sptr renderer = Enemy1->Add<RenderComponent>();
+			renderer->SetMesh(Enemy1Mesh);
+			//renderer->SetMaterial(monkeyMaterial);
+
+			RigidBody::Sptr physics = Enemy1->Add<RigidBody>(RigidBodyType::Dynamic);
+			auto PlayerCollider = physics->AddCollider(BoxCollider::Create(glm::vec3(1.0f, 1.0f, 1.0f)));
+			PlayerCollider->SetPosition(glm::vec3(0.0, 0.75, 0.0));
+
+			/*
+			// Example of a trigger that interacts with static and kinematic bodies as well as dynamic bodies
+			TriggerVolume::Sptr trigger = monkey1->Add<TriggerVolume>();
+			trigger->SetFlags(TriggerTypeFlags::Statics | TriggerTypeFlags::Kinematics);
+			trigger->AddCollider(BoxCollider::Create(glm::vec3(1.0f)));
+
+			monkey1->Add<TriggerVolumeEnterBehaviour>();
+			*/
+		}
+
+
+/*
 		GameObject::Sptr demoBase = scene->CreateGameObject("Demo Parent");
 
 		// Box to showcase the specular material
@@ -464,6 +524,7 @@ void DefaultSceneLayer::_CreateScene()
 
 			trigger->Add<TriggerVolumeEnterBehaviour>();
 		}
+		*/
 
 		/////////////////////////// UI //////////////////////////////
 		/*
